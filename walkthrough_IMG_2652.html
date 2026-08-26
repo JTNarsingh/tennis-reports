@@ -40,18 +40,23 @@ header .court{position:absolute;right:0;top:-4px;width:200px;height:auto;
 .baseline::after{content:'';position:absolute;left:112px;top:-3px;width:2px;height:8px;
   background:var(--green)}
 @media(max-width:640px){header .court{width:130px;opacity:.12}}
-.wrap{max-width:1180px;margin:0 auto;padding:22px 20px 70px;position:relative;z-index:1}
+.wrap{max-width:min(1720px,96vw);margin:0 auto;padding:18px 22px 70px;
+  position:relative;z-index:1}
+/* the reading sections below the stage stay narrow - long lines are hard to
+   read even when the screen is wide */
+.remember,.drills{max-width:1000px}
 h1{font-size:24px;margin:0 0 2px;letter-spacing:-.3px}
 .sub{color:var(--dim);font-size:13.5px;margin:0 0 12px}
 header .baseline{margin:8px 0 2px}
-.layout{display:flex;flex-direction:column;gap:12px;
-  height:calc(100vh - 150px);min-height:470px}
+.layout{display:flex;gap:16px;align-items:stretch;
+  height:calc(100vh - 132px);min-height:470px}
+.vidcol{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:10px}
 /* the two swings side by side at equal height - this comparison IS the page,
    so it gets the vertical space and the notes read underneath it */
-.films{flex:1 1 auto;min-height:0;display:flex;gap:16px;justify-content:center;
+.films{flex:1 1 auto;min-height:0;display:flex;gap:14px;justify-content:center;
   align-items:stretch}
 .film{margin:0;display:flex;flex-direction:column;min-width:0;min-height:0;
-  flex:0 1 auto}
+  flex:1 1 0}
 /* aspect-ratio + height:100% keeps each SVG overlay pixel-aligned with its
    video. object-fit would letterbox and the drawn pointers would drift. */
 .stack{position:relative;border-radius:14px;overflow:hidden;
@@ -66,8 +71,38 @@ header .baseline{margin:8px 0 2px}
 .pro-tag{color:var(--teal)}
 .filmnote{color:var(--dim);font-size:12.5px}
 .vidbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:0 0 auto}
-.notes{display:flex;gap:12px;flex:0 0 auto;align-items:stretch}
-.notes .tile{flex:1 1 0;min-width:0}
+.notes{flex:0 0 340px;min-width:250px;display:flex;flex-direction:column;
+  gap:12px;height:100%;min-height:0;overflow-y:auto;scrollbar-width:thin}
+.notes .tile{flex:0 0 auto}
+/* the problem is the header of the column - biggest thing after the video */
+.problem{flex:0 0 auto;border-left:4px solid var(--pink);
+  background:linear-gradient(180deg,rgba(255,95,143,.09),rgba(255,95,143,.02));
+  border-radius:14px;padding:15px 18px 16px}
+.problem .eyebrow{display:block;font-size:10px;font-weight:800;
+  letter-spacing:.13em;color:#ff88ab;margin-bottom:5px}
+.problem h2{margin:0 0 7px;font-size:20px;line-height:1.22;letter-spacing:-.2px}
+.problem p{margin:0;color:var(--dim);font-size:14px;line-height:1.5}
+.compare{display:flex;gap:8px;margin-top:12px}
+.cmp{flex:1 1 0;border-radius:10px;padding:8px 10px;text-align:center;
+  border:1px solid var(--line)}
+.cmp b{display:block;font-size:20px;line-height:1.1;
+  font-family:'Space Grotesk',-apple-system,sans-serif}
+.cmp span{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase}
+.cmp.you{background:rgba(255,95,143,.10);border-color:rgba(255,95,143,.34)}
+.cmp.you b{color:#ff9ab8} .cmp.you span{color:#ff88ab}
+.cmp.pro{background:rgba(63,207,142,.10);border-color:rgba(63,207,142,.34)}
+.cmp.pro b{color:#6fe0ac} .cmp.pro span{color:var(--green)}
+/* the fix reads as an instruction, not a second paragraph */
+.solution{flex:0 0 auto;border:1px solid rgba(63,207,142,.34);
+  background:linear-gradient(180deg,rgba(63,207,142,.10),rgba(63,207,142,.03));
+  border-radius:14px;padding:15px 18px 16px}
+.solution .eyebrow{display:block;font-size:10px;font-weight:800;
+  letter-spacing:.13em;color:var(--green);margin-bottom:7px}
+.solution .cue{margin:0 0 9px;font-size:17.5px;line-height:1.33;font-weight:600;
+  color:var(--fg);font-family:'Space Grotesk',-apple-system,sans-serif;
+  padding-left:13px;border-left:3px solid var(--green)}
+.solution .why{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
+@media(max-width:1400px){.notes{flex-basis:300px}}
 button{background:var(--card);color:var(--fg);border:1px solid var(--line);
   border-radius:10px;padding:9px 16px;font-size:14.5px;cursor:pointer;
   font-weight:600}
@@ -117,11 +152,13 @@ button:disabled{opacity:.4;cursor:default}
 .legend i{display:inline-block;width:18px;height:3px;background:var(--teal);
   vertical-align:middle;margin-right:6px;border-radius:2px}
 @media(max-width:760px),(max-height:520px){
-  .layout{height:auto;min-height:0}
+  .layout{flex-direction:column;height:auto;min-height:0}
+  .vidcol{width:100%}
   .films{flex-direction:column}
-  .film{width:100%}
+  /* flex:1 1 0 collapses to zero height once the column is auto-height */
+  .film{width:100%;flex:0 0 auto}
   .stack{width:100%;height:auto;flex:0 0 auto}
-  .notes{flex-direction:column}}
+  .notes{flex:0 0 auto;width:100%;height:auto;overflow:visible}}
 </style>
 <div class="wrap">
 <header>
@@ -139,6 +176,7 @@ button:disabled{opacity:.4;cursor:default}
 Press <b>Next</b> to continue.</p>
 </header>
 <div class="layout">
+  <div class="vidcol">
   <div class="films">
     <figure class="film">
       <div class="stack" style="aspect-ratio:382/490">
@@ -148,7 +186,7 @@ Press <b>Next</b> to continue.</p>
           <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7"
             refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#ffbe3c"/>
           </marker></defs>
-          <g id="an-rotation" style="display:none"><line x1="214.3" y1="206.7" x2="136.9" y2="212.8" stroke="#ffbe3c" stroke-width="6" stroke-linecap="round"/><circle cx="214.3" cy="206.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="136.9" cy="212.8" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="175.6" y="192.7" fill="#ffbe3c" font-size="14" font-weight="800" text-anchor="middle">shoulders at fullest turn</text></g><g id="an-off_arm" style="display:none"><polyline points="214.3,206.7 223.6,256.4 211.9,275.5" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="214.3" cy="206.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="223.6" cy="256.4" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="211.9" cy="275.5" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="211.9" y="259.5" fill="#ffbe3c" font-size="14" font-weight="800" text-anchor="middle">free arm</text></g><g id="an-drop" style="display:none"><line x1="0" y1="237.9" x2="460" y2="237.9" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="8" y="229.9" fill="#ff5f8f" font-size="13" font-weight="700">hand height at contact</text><line x1="123.6" y1="237.9" x2="123.6" y2="272.9" stroke="#ffbe3c" stroke-width="3" stroke-dasharray="4 3"/><circle cx="123.6" cy="272.9" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g><g id="an-face_slot" style="display:none"><ellipse cx="16.7" cy="277.4" rx="38.7" ry="26.7" fill="none" stroke="#ffbe3c" stroke-width="4" stroke-dasharray="8 5"/><text x="150.0" y="242.8" fill="#ffbe3c" font-size="14" font-weight="800" text-anchor="middle">you can see the strings &#8594; face is open</text></g><g id="an-contact_x" style="display:none"><line x1="218.4" y1="0" x2="218.4" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="225.4" y="20" fill="#ff5f8f" font-size="13" font-weight="700">hip</text><line x1="218.4" y1="237.9" x2="247.3" y2="237.9" stroke="#ffbe3c" stroke-width="4" marker-end="url(#ar)"/><circle cx="247.3" cy="237.9" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g><g id="an-knee" style="display:none"><polyline points="235.0,279.5 250.6,342.1 251.8,420.4" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="235.0" cy="279.5" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="250.6" cy="342.1" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="251.8" cy="420.4" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="263.6" y="347.1" fill="#ffbe3c" font-size="19" font-weight="800">167&#176;</text></g><g id="an-stance" style="display:none"><line x1="251.8" y1="436.4" x2="178.5" y2="436.4" stroke="#ffbe3c" stroke-width="5"/><line x1="251.8" y1="427.4" x2="251.8" y2="445.4" stroke="#ffbe3c" stroke-width="5"/><line x1="178.5" y1="427.4" x2="178.5" y2="445.4" stroke="#ffbe3c" stroke-width="5"/><text x="215.1" y="466.4" fill="#ffbe3c" font-size="17" font-weight="800" text-anchor="middle">45cm</text></g><g id="an-finish_bal" style="display:none"><line x1="218.4" y1="0" x2="218.4" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="225.4" y="20" fill="#ff5f8f" font-size="13" font-weight="700">hips at contact</text><line x1="218.4" y1="282.2" x2="196.8" y2="282.2" stroke="#ffbe3c" stroke-width="5" marker-end="url(#ar)"/><circle cx="196.8" cy="282.2" r="9" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g>
+          <g id="an-rotation" style="display:none"><line x1="214.3" y1="206.7" x2="136.9" y2="212.8" stroke="#ffbe3c" stroke-width="6" stroke-linecap="round"/><circle cx="214.3" cy="206.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="136.9" cy="212.8" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="128.5" y="174.4" width="94.3" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="175.6" y="191.5" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">turned 13%</text></g></g><g id="an-off_arm" style="display:none"><polyline points="214.3,206.7 223.6,256.4 211.9,275.5" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="214.3" cy="206.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="223.6" cy="256.4" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="211.9" cy="275.5" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="141.3" y="241.2" width="141.3" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="211.9" y="258.3" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">free arm 20cm up</text></g></g><g id="an-drop" style="display:none"><line x1="0" y1="237.9" x2="460" y2="237.9" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="123.6" y1="237.9" x2="123.6" y2="272.9" stroke="#ffbe3c" stroke-width="3" stroke-dasharray="4 3"/><circle cx="123.6" cy="272.9" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="21.4" y="209.7" width="149.1" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="96.0" y="226.8" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">height at contact</text></g><g><rect x="123.6" y="243.2" width="86.5" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="166.9" y="260.3" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">22cm drop</text></g></g><g id="an-face_slot" style="display:none"><ellipse cx="16.7" cy="277.4" rx="38.7" ry="26.7" fill="none" stroke="#ffbe3c" stroke-width="4" stroke-dasharray="8 5"/><g><rect x="36.3" y="226.5" width="227.4" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="150.0" y="243.6" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">strings visible = face open</text></g></g><g id="an-contact_x" style="display:none"><line x1="218.4" y1="0" x2="218.4" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="218.4" y1="237.9" x2="247.3" y2="237.9" stroke="#ffbe3c" stroke-width="4" marker-end="url(#ar)"/><circle cx="247.3" cy="237.9" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="179.0" y="7.8" width="78.6" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="218.4" y="24.9" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">hip line</text></g><g><rect x="173.9" y="201.7" width="117.8" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="232.8" y="218.8" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">18cm in front</text></g></g><g id="an-knee" style="display:none"><polyline points="235.0,279.5 250.6,342.1 251.8,420.4" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="235.0" cy="279.5" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="250.6" cy="342.1" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="251.8" cy="420.4" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="249.5" y="329.1" width="94.3" height="26.0" rx="13.0" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="296.6" y="347.5" fill="#ffbe3c" font-size="15" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">167° knee</text></g></g><g id="an-stance" style="display:none"><line x1="251.8" y1="436.4" x2="178.5" y2="436.4" stroke="#ffbe3c" stroke-width="5"/><line x1="251.8" y1="427.4" x2="251.8" y2="445.4" stroke="#ffbe3c" stroke-width="5"/><line x1="178.5" y1="427.4" x2="178.5" y2="445.4" stroke="#ffbe3c" stroke-width="5"/><g><rect x="168.0" y="449.4" width="94.3" height="26.0" rx="13.0" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="215.1" y="467.8" fill="#ffbe3c" font-size="15" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">45cm base</text></g></g><g id="an-finish_bal" style="display:none"><line x1="218.4" y1="0" x2="218.4" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="218.4" y1="282.2" x2="196.8" y2="282.2" stroke="#ffbe3c" stroke-width="5" marker-end="url(#ar)"/><circle cx="196.8" cy="282.2" r="9" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="151.6" y="7.8" width="133.4" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="218.4" y="24.9" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">hips at contact</text></g><g><rect x="137.0" y="246.0" width="141.3" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="207.6" y="263.1" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">drifts back 13cm</text></g></g>
         </svg>
       </div>
       <figcaption><b class="you-tag">YOU</b>
@@ -163,7 +201,7 @@ Press <b>Next</b> to continue.</p>
           <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7"
             refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#ffbe3c"/>
           </marker></defs>
-          <g id="anp-rotation" style="display:none"><line x1="263.0" y1="198.7" x2="203.3" y2="213.9" stroke="#ffbe3c" stroke-width="6" stroke-linecap="round"/><circle cx="263.0" cy="198.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="203.3" cy="213.9" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="233.1" y="184.7" fill="#ffbe3c" font-size="14" font-weight="800" text-anchor="middle">shoulders at fullest turn</text></g><g id="anp-off_arm" style="display:none"><polyline points="263.0,198.7 282.6,228.2 288.5,245.7" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="263.0" cy="198.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="282.6" cy="228.2" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="288.5" cy="245.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="288.5" y="229.7" fill="#ffbe3c" font-size="14" font-weight="800" text-anchor="middle">free arm</text></g><g id="anp-drop" style="display:none"><line x1="0" y1="232.8" x2="460" y2="232.8" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="8" y="224.8" fill="#ff5f8f" font-size="13" font-weight="700">hand height at contact</text><line x1="151.0" y1="232.8" x2="151.0" y2="282.4" stroke="#ffbe3c" stroke-width="3" stroke-dasharray="4 3"/><circle cx="151.0" cy="282.4" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g><g id="anp-face_slot" style="display:none"></g><g id="anp-contact_x" style="display:none"><line x1="239.6" y1="0" x2="239.6" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="246.6" y="20" fill="#ff5f8f" font-size="13" font-weight="700">hip</text><line x1="239.6" y1="232.8" x2="300.4" y2="232.8" stroke="#ffbe3c" stroke-width="4" marker-end="url(#ar)"/><circle cx="300.4" cy="232.8" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g><g id="anp-knee" style="display:none"><polyline points="250.6,281.1 285.7,343.0 272.4,409.3" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="250.6" cy="281.1" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="285.7" cy="343.0" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="272.4" cy="409.3" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><text x="298.7" y="348.0" fill="#ffbe3c" font-size="19" font-weight="800">139&#176;</text></g><g id="anp-stance" style="display:none"><line x1="272.4" y1="425.3" x2="163.1" y2="425.3" stroke="#ffbe3c" stroke-width="5"/><line x1="272.4" y1="416.3" x2="272.4" y2="434.3" stroke="#ffbe3c" stroke-width="5"/><line x1="163.1" y1="416.3" x2="163.1" y2="434.3" stroke="#ffbe3c" stroke-width="5"/><text x="217.8" y="455.3" fill="#ffbe3c" font-size="17" font-weight="800" text-anchor="middle">75cm</text></g><g id="anp-finish_bal" style="display:none"><line x1="239.6" y1="0" x2="239.6" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><text x="246.6" y="20" fill="#ff5f8f" font-size="13" font-weight="700">hips at contact</text><line x1="239.6" y1="275.5" x2="242.2" y2="275.5" stroke="#ffbe3c" stroke-width="5" marker-end="url(#ar)"/><circle cx="242.2" cy="275.5" r="9" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/></g>
+          <g id="anp-rotation" style="display:none"><line x1="263.0" y1="198.7" x2="203.3" y2="213.9" stroke="#ffbe3c" stroke-width="6" stroke-linecap="round"/><circle cx="263.0" cy="198.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="203.3" cy="213.9" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="186.0" y="166.5" width="94.3" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="233.1" y="183.6" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">turned 21%</text></g></g><g id="anp-off_arm" style="display:none"><polyline points="263.0,198.7 282.6,228.2 288.5,245.7" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="263.0" cy="198.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="282.6" cy="228.2" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="288.5" cy="245.7" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="217.8" y="211.4" width="141.3" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="288.5" y="228.5" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">free arm 30cm up</text></g></g><g id="anp-drop" style="display:none"><line x1="0" y1="232.8" x2="460" y2="232.8" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="151.0" y1="232.8" x2="151.0" y2="282.4" stroke="#ffbe3c" stroke-width="3" stroke-dasharray="4 3"/><circle cx="151.0" cy="282.4" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="21.4" y="204.5" width="149.1" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="96.0" y="221.7" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">height at contact</text></g><g><rect x="151.0" y="245.4" width="86.5" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="194.2" y="262.5" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">34cm drop</text></g></g><g id="anp-face_slot" style="display:none"></g><g id="anp-contact_x" style="display:none"><line x1="239.6" y1="0" x2="239.6" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="239.6" y1="232.8" x2="300.4" y2="232.8" stroke="#ffbe3c" stroke-width="4" marker-end="url(#ar)"/><circle cx="300.4" cy="232.8" r="10" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="200.2" y="7.8" width="78.6" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="239.6" y="24.9" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">hip line</text></g><g><rect x="211.1" y="196.5" width="117.8" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="270.0" y="213.7" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">42cm in front</text></g></g><g id="anp-knee" style="display:none"><polyline points="250.6,281.1 285.7,343.0 272.4,409.3" fill="none" stroke="#ffbe3c" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="250.6" cy="281.1" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="285.7" cy="343.0" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><circle cx="272.4" cy="409.3" r="7" fill="#ff5f8f" stroke="#0b0d10" stroke-width="2.5"/><g><rect x="284.5" y="330.0" width="94.3" height="26.0" rx="13.0" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="331.7" y="348.4" fill="#ffbe3c" font-size="15" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">139° knee</text></g></g><g id="anp-stance" style="display:none"><line x1="272.4" y1="425.3" x2="163.1" y2="425.3" stroke="#ffbe3c" stroke-width="5"/><line x1="272.4" y1="416.3" x2="272.4" y2="434.3" stroke="#ffbe3c" stroke-width="5"/><line x1="163.1" y1="416.3" x2="163.1" y2="434.3" stroke="#ffbe3c" stroke-width="5"/><g><rect x="170.6" y="438.3" width="94.3" height="26.0" rx="13.0" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="217.8" y="456.7" fill="#ffbe3c" font-size="15" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">75cm base</text></g></g><g id="anp-finish_bal" style="display:none"><line x1="239.6" y1="0" x2="239.6" y2="900" stroke="#ff5f8f" stroke-width="2.5" stroke-dasharray="9 6"/><line x1="239.6" y1="275.5" x2="242.2" y2="275.5" stroke="#ffbe3c" stroke-width="5" marker-end="url(#ar)"/><circle cx="242.2" cy="275.5" r="9" fill="#78e1af" stroke="#0b0d10" stroke-width="3"/><g><rect x="172.8" y="7.8" width="133.4" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ff5f8f" stroke-opacity=".55" stroke-width="1.2"/><text x="239.6" y="24.9" fill="#ff5f8f" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">hips at contact</text></g><g><rect x="162.4" y="239.3" width="156.9" height="24.5" rx="12.2" fill="#0b1410" fill-opacity=".82" stroke="#ffbe3c" stroke-opacity=".55" stroke-width="1.2"/><text x="240.9" y="256.4" fill="#ffbe3c" font-size="13.5" font-weight="800" text-anchor="middle" font-family="-apple-system,system-ui,sans-serif">drives forward 2cm</text></g></g>
         </svg>
       </div>
       <figcaption><b class="pro-tag">Sinner</b>
@@ -179,24 +217,25 @@ Press <b>Next</b> to continue.</p>
     <span class="counter" id="counter"></span>
     <div class="dots" id="dots"></div>
   </div>
+  </div>
 
   <div class="notes">
-    <div class="tile intro" id="tile-wrong">
-      <span class="tag">HOW THIS WORKS</span>
-      <h3 id="w-title">Watch one swing, stop by stop</h3>
+    <header class="problem" id="tile-wrong">
+      <span class="eyebrow" id="w-eyebrow">HOW THIS WORKS</span>
+      <h2 id="w-title">Watch one swing, stop by stop</h2>
       <p id="w-body">Press Play. Both videos run together and freeze at the
       first thing to fix &mdash; yours on the left, a pro at the very same
       moment on the right.</p>
-      <div class="nums" id="w-nums" style="display:none">
-        <div><b id="n-you"></b><span>this swing</span></div>
-        <div><b id="n-pro"></b><span>a pro</span></div>
+      <div class="compare" id="w-nums" style="display:none">
+        <div class="cmp you"><b id="n-you"></b><span>your swing</span></div>
+        <div class="cmp pro"><b id="n-pro"></b><span>a pro</span></div>
       </div>
-    </div>
-    <div class="tile fix" id="tile-fix" style="visibility:hidden">
-      <span class="tag">HOW TO FIX IT</span>
-      <h3>Try this</h3>
-      <p id="f-body"></p>
-    </div>
+    </header>
+    <section class="solution" id="tile-fix" style="visibility:hidden">
+      <span class="eyebrow">THE FIX</span>
+      <p class="cue" id="f-cue"></p>
+      <p class="why" id="f-body"></p>
+    </section>
   </div>
 </div>
 
@@ -260,16 +299,19 @@ function showStop(k){
   if (gp) gp.style.display = '';
   pv.pause(); pv.currentTime = s.tp;
   document.getElementById('pronote').textContent = 'Look: ' + s.note + '.';
-  var tw = document.getElementById('tile-wrong');
-  tw.className = 'tile wrong';
-  tw.querySelector('.tag').textContent = "WHAT'S HAPPENING — " + s.name.toUpperCase();
+  document.getElementById('w-eyebrow').textContent = 'PROBLEM \u00B7 ' + s.name.toUpperCase();
   document.getElementById('w-title').textContent = s.title;
   document.getElementById('w-body').textContent = s.wrong;
   document.getElementById('w-nums').style.display = '';
   document.getElementById('n-you').textContent = s.you;
   document.getElementById('n-pro').textContent = s.pro;
   document.getElementById('tile-fix').style.visibility = '';
-  document.getElementById('f-body').textContent = s.fix;
+  // first sentence is the instruction, the rest is why it works
+  var cut = s.fix.indexOf('. ');
+  document.getElementById('f-cue').textContent =
+    cut > 0 ? s.fix.slice(0, cut + 1) : s.fix;
+  document.getElementById('f-body').textContent =
+    cut > 0 ? s.fix.slice(cut + 2) : '';
   counter.textContent = 'stop ' + (k+1) + ' of ' + STOPS.length;
   next.textContent = (k === STOPS.length-1) ? 'Replay ↻' : 'Next →';
   setDots();
